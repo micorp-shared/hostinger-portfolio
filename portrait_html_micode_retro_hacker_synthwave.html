@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Micode — Portrait</title>
+  <style>
+    :root{
+      --bg0:#07060e;
+      --bg1:#0b0920;
+      --grid:rgba(255, 0, 255, .16);
+      --neon1:#ff3bd6;
+      --neon2:#36f7ff;
+      --text:#e8e5ff;
+      --muted:#b8b1ff;
+      --card:rgba(16, 10, 36, .58);
+      --card2:rgba(10, 6, 22, .55);
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 22px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 1000px at 70% 20%, rgba(255,59,214,.15), transparent 55%),
+        radial-gradient(900px 700px at 25% 55%, rgba(54,247,255,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* subtle animated scanlines */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.06) 0px,
+          rgba(255,255,255,.06) 1px,
+          rgba(0,0,0,0) 3px,
+          rgba(0,0,0,0) 6px
+        );
+      mix-blend-mode:overlay;
+      opacity:.08;
+      animation: scan 10s linear infinite;
+      z-index:0;
+    }
+    @keyframes scan{
+      from{ transform: translateY(-30px); }
+      to{ transform: translateY(30px); }
+    }
+
+    /* neon grid floor */
+    .grid{
+      position:fixed;
+      left:50%;
+      bottom:-40vh;
+      width:min(1400px, 180vw);
+      height:80vh;
+      transform:translateX(-50%) perspective(900px) rotateX(68deg);
+      transform-origin:center;
+      background:
+        linear-gradient(to right, var(--grid) 1px, transparent 1px) 0 0 / 56px 56px,
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px) 0 0 / 56px 56px;
+      filter: drop-shadow(0 0 14px rgba(255,59,214,.25));
+      opacity:.9;
+      z-index:0;
+      mask-image: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,1) 35%, rgba(0,0,0,1));
+    }
+
+    header{
+      position:relative;
+      z-index:2;
+      padding:28px clamp(18px, 4vw, 56px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .brand img{
+      height:30px;
+      width:auto;
+      opacity:.95;
+      filter: drop-shadow(0 0 10px rgba(54,247,255,.18));
+    }
+
+    .brand .tag{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+      opacity:.85;
+      display:none;
+    }
+
+    @media (min-width: 720px){
+      .brand .tag{ display:block; }
+    }
+
+    .pill{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.06em;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow: 0 0 0 1px rgba(255,59,214,.08) inset;
+      color:rgba(232,229,255,.92);
+      white-space:nowrap;
+    }
+
+    main{
+      position:relative;
+      z-index:2;
+      padding: 10px clamp(18px, 4vw, 56px) 70px;
+      display:grid;
+      place-items:center;
+    }
+
+    .card{
+      width:min(980px, 100%);
+      border-radius:var(--radius);
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(800px 320px at 20% 0%, rgba(255,59,214,.25), transparent 60%),
+        radial-gradient(700px 320px at 85% 20%, rgba(54,247,255,.22), transparent 55%),
+        linear-gradient(90deg, rgba(255,59,214,.18), rgba(54,247,255,.10));
+      opacity:.55;
+      filter: blur(18px);
+      z-index:-1;
+    }
+
+    .wrap{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:0;
+    }
+
+    @media (min-width: 920px){
+      .wrap{ grid-template-columns: 0.92fr 1.08fr; }
+    }
+
+    .portrait{
+      position:relative;
+      padding: 26px;
+      display:grid;
+      place-items:center;
+      min-height: 360px;
+    }
+
+    .frame{
+      width:min(420px, 100%);
+      aspect-ratio: 4 / 5;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.25);
+      box-shadow:
+        0 0 0 1px rgba(255,59,214,.16) inset,
+        0 0 0 1px rgba(54,247,255,.12),
+        0 28px 80px rgba(0,0,0,.65);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .frame::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:
+        linear-gradient(135deg, rgba(255,59,214,.30), transparent 40%),
+        linear-gradient(315deg, rgba(54,247,255,.22), transparent 45%);
+      mix-blend-mode:screen;
+      opacity:.55;
+      pointer-events:none;
+    }
+
+    .frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:
+        contrast(1.05)
+        brightness(.95)
+        grayscale(1)
+        drop-shadow(0 0 12px rgba(255,59,214,.08));
+      transform: scale(1.02);
+    }
+
+    /* glitch stripes */
+    .glitch{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+      mix-blend-mode:screen;
+      background:
+        linear-gradient(90deg, rgba(255,59,214,.8), transparent 35%, rgba(54,247,255,.75) 70%, transparent),
+        repeating-linear-gradient( to bottom, rgba(255,255,255,.20) 0px, rgba(255,255,255,.20) 1px, transparent 5px, transparent 9px);
+      animation: glitch 3.6s ease-in-out infinite;
+    }
+
+    @keyframes glitch{
+      0%, 100%{ transform: translateX(0); clip-path: inset(0 0 0 0); }
+      12%{ transform: translateX(-10px); clip-path: inset(12% 0 62% 0); }
+      22%{ transform: translateX(8px); clip-path: inset(48% 0 20% 0); }
+      36%{ transform: translateX(-6px); clip-path: inset(5% 0 74% 0); }
+      52%{ transform: translateX(6px); clip-path: inset(66% 0 6% 0); }
+      68%{ transform: translateX(-4px); clip-path: inset(28% 0 44% 0); }
+    }
+
+    .hud{
+      position:absolute;
+      left:18px;
+      bottom:18px;
+      right:18px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(232,229,255,.86);
+      opacity:.92;
+    }
+
+    .hud .chip{
+      padding:8px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.26);
+      box-shadow: 0 0 0 1px rgba(255,59,214,.10) inset;
+      backdrop-filter: blur(8px);
+    }
+
+    .hud .bars{
+      display:flex;
+      gap:6px;
+      align-items:flex-end;
+      padding:8px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      backdrop-filter: blur(8px);
+    }
+
+    .hud .bars i{
+      display:block;
+      width:6px;
+      border-radius: 6px;
+      background: linear-gradient(180deg, rgba(54,247,255,.95), rgba(255,59,214,.9));
+      opacity:.9;
+      animation: bars 1.4s ease-in-out infinite;
+    }
+
+    .hud .bars i:nth-child(1){ height:10px; animation-delay:0s; }
+    .hud .bars i:nth-child(2){ height:16px; animation-delay:.18s; }
+    .hud .bars i:nth-child(3){ height:12px; animation-delay:.35s; }
+    .hud .bars i:nth-child(4){ height:20px; animation-delay:.52s; }
+
+    @keyframes bars{
+      0%,100%{ transform: scaleY(.75); opacity:.65; }
+      50%{ transform: scaleY(1.15); opacity:1; }
+    }
+
+    .content{
+      padding: 30px 26px 28px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .kicker{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(184,177,255,.9);
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(34px, 4.4vw, 52px);
+      line-height:1.02;
+      letter-spacing:-.02em;
+      text-shadow:
+        0 0 16px rgba(255,59,214,.18),
+        0 0 18px rgba(54,247,255,.12);
+    }
+
+    .subtitle{
+      margin:0;
+      max-width: 58ch;
+      color: rgba(232,229,255,.86);
+      line-height:1.6;
+      font-size: 15px;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 6px;
+    }
+
+    .meta span{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.08em;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 0 0 1px rgba(54,247,255,.08) inset;
+      backdrop-filter: blur(8px);
+    }
+
+    .cta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top: 4px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      color: rgba(232,229,255,.95);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      text-decoration:none;
+      font-family:var(--mono);
+      letter-spacing:.06em;
+      font-size: 12px;
+      text-transform: uppercase;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      box-shadow: 0 0 0 1px rgba(255,59,214,.10) inset;
+    }
+
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.22);
+      box-shadow:
+        0 0 0 1px rgba(54,247,255,.12) inset,
+        0 10px 40px rgba(0,0,0,.35);
+    }
+
+    .btn .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.75), rgba(255,255,255,0) 60%),
+                  linear-gradient(180deg, var(--neon1), var(--neon2));
+      box-shadow: 0 0 12px rgba(255,59,214,.28);
+      opacity:.9;
+    }
+
+    footer{
+      position:relative;
+      z-index:2;
+      padding: 18px clamp(18px, 4vw, 56px) 34px;
+      display:flex;
+      justify-content:center;
+      color: rgba(184,177,255,.78);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity:.9;
+    }
+
+    .spark{
+      position:fixed;
+      inset:-40px;
+      pointer-events:none;
+      z-index:1;
+      background:
+        radial-gradient(3px 3px at 15% 30%, rgba(54,247,255,.45), transparent 60%),
+        radial-gradient(2px 2px at 70% 20%, rgba(255,59,214,.35), transparent 60%),
+        radial-gradient(2px 2px at 45% 80%, rgba(255,255,255,.22), transparent 60%),
+        radial-gradient(2px 2px at 85% 65%, rgba(54,247,255,.22), transparent 60%);
+      opacity:.6;
+      filter: blur(.2px);
+      animation: drift 14s linear infinite;
+    }
+
+    @keyframes drift{
+      from{ transform: translate3d(0,0,0); }
+      to{ transform: translate3d(18px,-22px,0); }
+    }
+
+    /* accessibility */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+      body::before{ display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="spark" aria-hidden="true"></div>
+  <div class="grid" aria-hidden="true"></div>
+
+  <header>
+    <a class="brand" href="#" aria-label="Micorp">
+      <img src="https://f005.backblazeb2.com/file/micorp-assets/white_logotype_micorp.png" alt="Micorp" />
+      <span class="tag">studio signal / micorp</span>
+    </a>
+    <div class="pill">RETRO • HACKER • SYNTHWAVE</div>
+  </header>
+
+  <main>
+    <section class="card" aria-label="Portrait de Micode">
+      <div class="wrap">
+        <div class="portrait">
+          <div class="frame">
+            <img
+              src="https://f005.backblazeb2.com/file/micorp-assets/michael_BW.jpg"
+              alt="Portrait noir et blanc de Micode"
+              loading="eager"
+            />
+            <div class="glitch" aria-hidden="true"></div>
+            <div class="hud" aria-hidden="true">
+              <div class="chip">ID: MICODE</div>
+              <div class="bars"><i></i><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="title">
+            <div class="kicker">/ portrait • signal capturé</div>
+            <h1>Micode</h1>
+            <p class="subtitle">
+              Une vibe rétro-hacker façon synthwave : scanlines, néons et HUD minimal.
+              Parfait pour une page “bio/hero” simple.
+            </p>
+          </div>
+
+          <div class="meta" aria-label="tags">
+            <span>VIDÉOS</span>
+            <span>TECH</span>
+            <span>SÉCURITÉ</span>
+            <span>CODE</span>
+          </div>
+
+          <div class="cta" aria-label="actions">
+            <a class="btn" href="#" role="button"><span class="dot" aria-hidden="true"></span>Portfolio</a>
+            <a class="btn" href="#" role="button"><span class="dot" aria-hidden="true"></span>Chaîne</a>
+            <a class="btn" href="#" role="button"><span class="dot" aria-hidden="true"></span>Contact</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© MICORP — SYNTHWAVE TERMINAL UI</span>
+  </footer>
+</body>
+</html>
